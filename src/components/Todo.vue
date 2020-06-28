@@ -40,7 +40,7 @@ export default {
   methods: {
     addTodo() {
       if (this.newTodo !== '') {
-        this.todos.push(
+        this.todos.unshift(
           {
             'text': this.newTodo,
             'completed': false,
