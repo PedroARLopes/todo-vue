@@ -8,18 +8,20 @@
              placeholder="add new todo">
       <img class="add-todo-image" @click="addTodo" src="../assets/add.png"/>
     </div>
-    <div class="todo-items-grid">
-      <ul class="clean-list">
-        <li class="todo-items" v-for="todo in todos" :key="todo.text">
-          <input class="todo-checkbox"
-             id="checkbox"
-             type="checkbox"
-             v-model="todo.completed"
-             @change="deleteTodo(todo)" />
-          <label class="todo-item" for="checkbox">{{ todo.text }}</label>
-        </li>
-      </ul>
-    </div>
+    <table class="todo-items-grid">
+      <tr class="todo-items" v-for="todo in todos" :key="todo.text">
+        <td class="todo-checkbox">
+          <input
+                 id="checkbox2"
+                 type="checkbox"
+                 v-model="todo.completed"
+                 @change="deleteTodo(todo)" />
+        </td>
+        <td>
+          <label class="todo-item" for="checkbox2">{{ todo.text }}</label>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -110,7 +112,7 @@ h1 {
 }
 
 .todo-checkbox {
-  margin-right: 10px;
+  width: 1%;
 }
 
 .todo-items-grid{
