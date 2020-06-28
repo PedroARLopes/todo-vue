@@ -10,13 +10,13 @@
     </div>
     <div>
       <ul class="clean-list">
-        <li class="todo-items" v-for="(todo, index) in todos" :key="todo.index">
+        <li class="todo-items" v-for="todo in todos" :key="todo">
           <input class="todo-checkbox"
-                 type="checkbox"
-                 v-model="todos"
                  id="checkbox"
-                 @change="deleteTodo(index)" />
-          <label class="todo-item" for="checkbox">{{ todo }}</label>
+                 type="checkbox"
+                 v-model="todo.completed"
+                 @change="deleteTodo(todo)" />
+          <label class="todo-item" for="checkbox">{{ todo.text }}</label>
         </li>
       </ul>
     </div>
@@ -37,13 +37,18 @@ export default {
   },
   methods: {
     addTodo() {
-      if (this.newTodo !== "") {
-        this.todos.push(this.newTodo);
-        this.newTodo = "";
+      if (this.newTodo !== '') {
+        this.todos.push(
+          {
+            'text': this.newTodo,
+            'completed': false,
+          }
+        );
+        this.newTodo = '';
       }
     },
-    deleteTodo(index) {
-      this.todos.splice(index, 1);
+    deleteTodo(todo) {
+      this.todos.splice(this.todos.indexOf(todo), 1);
     }
   }
 }
