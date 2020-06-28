@@ -9,16 +9,16 @@
       <img class="add-todo-image" @click="addTodo" src="../assets/add.png"/>
     </div>
     <table class="todo-items-grid">
-      <tr class="todo-items" v-for="todo in todos" :key="todo.text">
+      <tr class="todo-items" v-for="todo in todos" :key="todo.id">
         <td class="todo-checkbox">
           <input
-                 id="checkbox2"
+                 id="checkbox"
                  type="checkbox"
                  v-model="todo.completed"
                  @change="deleteTodo(todo)" />
         </td>
         <td>
-          <label class="todo-item" for="checkbox2">{{ todo.text }}</label>
+          <label class="todo-item" for="checkbox">{{ todo.text }}</label>
         </td>
       </tr>
     </table>
@@ -33,6 +33,7 @@ export default {
   },
   data: function() {
     return {
+      id_counter: 0,
       todos: [],
       newTodo: "",
     }
@@ -40,10 +41,12 @@ export default {
   methods: {
     addTodo() {
       if (this.newTodo !== '') {
+        this.id_counter++;
         this.todos.unshift(
           {
-            'text': this.newTodo,
-            'completed': false,
+            id: this.id_counter,
+            text: this.newTodo,
+            completed: false,
           }
         );
         this.newTodo = '';
@@ -65,11 +68,6 @@ h1 {
   font-family: "Roboto Mono Medium for Powerline";
 }
 
-.clean-list {
-  list-style: none;
-  padding-left: 0;
-}
-
 .new-todo {
   display: inline-block;
   width: 50%;
@@ -85,11 +83,12 @@ h1 {
 .todo-input {
   font-size: 20px;
   padding: 10px 60px 5px 20px;
-  height: 40px;
-  width: 85%;
+  height: 60px;
+  width: 100%;
   border-radius: 45px;
   float: left;
   border: solid lightskyblue 3px;
+  box-sizing: border-box;
 }
 
 .todo-input::placeholder {
@@ -107,8 +106,9 @@ h1 {
   width: 65px;
   height: 65px;
   float: left;
-  margin-left: -60px;
+  margin-left: -61px;
   margin-top: -2px;
+  position: absolute;
 }
 
 .todo-checkbox {
@@ -128,7 +128,7 @@ h1 {
 }
 
 .todo-item {
-
+  width: 99%;
 }
 
 </style>
