@@ -9,18 +9,20 @@
       <img class="add-todo-image" @click="addTodo" src="../assets/add.png"/>
     </div>
     <table class="todo-items-grid">
-      <tr class="todo-items" v-for="todo in todos" :key="todo.id">
-        <td class="todo-checkbox">
-          <input
-                 id="checkbox"
-                 type="checkbox"
-                 v-model="todo.completed"
-                 @change="deleteTodo(todo)" />
-        </td>
-        <td>
-          <label class="todo-item" for="checkbox">{{ todo.text }}</label>
-        </td>
-      </tr>
+      <transition-group name="todo-item-rows">
+        <tr class="todo-item-row" v-for="todo in todos" :key="todo.id">
+          <td class="todo-checkbox">
+            <input
+                   id="checkbox"
+                   type="checkbox"
+                   v-model="todo.completed"
+                   @change="completeTodo(todo)" />
+          </td>
+          <td>
+            <label v-bind:class="[todo.completed ? 'todo-item-completed' : 'todo-item']" for="checkbox">{{ todo.text }}</label>
+          </td>
+        </tr>
+      </transition-group>
     </table>
   </div>
 </template>
@@ -54,6 +56,11 @@ export default {
     },
     deleteTodo(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1);
+    },
+    completeTodo(todo) {
+      let index = this.todos.indexOf(todo);
+      this.todos.splice(index, 1);
+      this.todos.push(todo);
     }
   }
 }
@@ -121,14 +128,23 @@ h1 {
   width: 50%;
 }
 
-.todo-items{
+.todo-item-row{
   margin-top: 5px;
   text-align: left;
   color: slategrey;
+  transition: all 1s;
+  display: table;
 }
 
 .todo-item {
   width: 99%;
+}
+
+.todo-item-completed {
+  width: 99%;
+  text-decoration: line-through;
+  color: lightslategray;
+  font-style: italic;
 }
 
 </style>
