@@ -16,7 +16,7 @@
                    id="checkbox"
                    type="checkbox"
                    v-model="todo.completed"
-                   @change="completeTodo(todo)" />
+                   @change="checkTodo(todo)" />
           </td>
           <td>
             <label v-bind:class="[todo.completed ? 'todo-item-completed' : 'todo-item']" for="checkbox">{{ todo.text }}</label>
@@ -57,10 +57,14 @@ export default {
     deleteTodo(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1);
     },
-    completeTodo(todo) {
+    checkTodo(todo) {
       let index = this.todos.indexOf(todo);
       this.todos.splice(index, 1);
-      this.todos.push(todo);
+      if (todo.completed) {
+        this.todos.push(todo);
+      } else {
+        this.todos.unshift(todo);
+      }
     }
   }
 }
