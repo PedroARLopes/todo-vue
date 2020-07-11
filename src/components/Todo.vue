@@ -9,8 +9,8 @@
       <img class="add-todo-image" @click="addTodo" src="../assets/add.png"/>
     </div>
     <table class="todo-items-grid">
-      <transition-group name="todo-item-rows">
-        <tr class="todo-item-row" v-for="todo in todos" :key="todo.id">
+      <transition-group v-on:leave="leave" v-bind:css="false">
+        <tr class="todo-item-row" v-for="todo in todos" :key="todo.id"  @mouseover="hovering = todo" @mouseleave="hovering = {}">
           <td class="todo-checkbox">
             <input
                    id="checkbox"
@@ -21,6 +21,13 @@
           <td>
             <label v-bind:class="[todo.completed ? 'todo-item-completed' : 'todo-item']" for="checkbox">{{ todo.text }}</label>
           </td>
+          <td class="todo-item-delete">
+            <img class="delete-todo-image"
+                 v-if="todo.completed && hovering.id === todo.id"
+                 @click="deleteTodo(todo)"
+                 src="../assets/delete.png"
+            />
+          </td>
         </tr>
       </transition-group>
     </table>
@@ -28,6 +35,8 @@
 </template>
 
 <script>
+import Velocity from 'velocity-animate'
+
 export default {
   name: 'Todo',
   props: {
@@ -38,9 +47,14 @@ export default {
       id_counter: 0,
       todos: [],
       newTodo: "",
+      hovering: {},
     }
   },
   methods: {
+    leave(el, done) {
+      Velocity(el, {fontSize: '50%', opacity: 0}, {duration: 500})
+      Velocity(el, {height: 0}, { complete: done })
+    },
     addTodo() {
       if (this.newTodo !== '') {
         this.id_counter++;
@@ -58,6 +72,9 @@ export default {
       this.todos.splice(this.todos.indexOf(todo), 1);
     },
     checkTodo(todo) {
+      // This is so the delete icon does not show when checking the todo
+      this.hovering = {};
+
       let index = this.todos.indexOf(todo);
       this.todos.splice(index, 1);
       if (todo.completed) {
@@ -141,14 +158,26 @@ h1 {
 }
 
 .todo-item {
-  width: 99%;
+  width: 95%;
 }
 
 .todo-item-completed {
-  width: 99%;
+  width: 95%;
   text-decoration: line-through;
-  color: lightslategray;
   font-style: italic;
+  color: transparent;
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.todo-item-delete {
+  width: 4%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.delete-todo-image {
+  transition: right;
+  width: 70%;
 }
 
 </style>
