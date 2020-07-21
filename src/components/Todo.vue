@@ -9,7 +9,7 @@
       <img class="add-todo-image" @click="addTodo" src="../assets/add.png"/>
     </div>
     <table class="todo-items-grid">
-      <transition-group v-on:leave="leave" v-bind:css="false">
+      <transition-group v-on:leave="leave" v-on:before-enter="beforeEnter" v-on:enter="enter" v-bind:css="false">
         <tr class="todo-item-row" v-for="todo in this.$store.getters.getTodos" :key="todo.id"  @mouseover="hovering = todo" @mouseleave="hovering = {}">
           <td class="todo-checkbox">
             <input
@@ -46,9 +46,20 @@ export default {
     }
   },
   methods: {
+    enter: function (el, done) {
+      setTimeout(function () {
+        Velocity(el, { opacity: 1, height: '1em' }, { complete: done })
+      }, 250)
+    },
+    beforeEnter: function (el) {
+      el.style.opacity = 0
+      el.style.height = 0
+    },
     leave(el, done) {
-      Velocity(el, {fontSize: '50%', opacity: 0}, {duration: 500})
-      Velocity(el, {height: 0}, { complete: done })
+      setTimeout(function () {
+        Velocity(el, {fontSize: '50%', opacity: 0})
+        Velocity(el, {height: 0}, { complete: done })
+      }, 250)
     },
     addTodo() {
       this.$store.commit('addTodo', this.newTodo);
