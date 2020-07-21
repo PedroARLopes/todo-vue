@@ -17,7 +17,7 @@ export default new Vuex.Store({
     },
     mutations: {
         addTodo(state, todo) {
-            if (todo == "") {
+            if (todo === "") {
                 return;
             }
             state.id_counter++;
