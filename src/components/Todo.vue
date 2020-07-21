@@ -10,7 +10,7 @@
     </div>
     <table class="todo-items-grid">
       <transition-group v-on:leave="leave" v-bind:css="false">
-        <tr class="todo-item-row" v-for="todo in todos" :key="todo.id"  @mouseover="hovering = todo" @mouseleave="hovering = {}">
+        <tr class="todo-item-row" v-for="todo in this.$store.getters.getTodos" :key="todo.id"  @mouseover="hovering = todo" @mouseleave="hovering = {}">
           <td class="todo-checkbox">
             <input
                    id="checkbox"
@@ -19,7 +19,7 @@
                    @change="checkTodo(todo)" />
           </td>
           <td>
-            <label v-bind:class="[todo.completed ? 'todo-item-completed' : 'todo-item']" for="checkbox">{{ todo.text }}</label>
+            <label v-bind:class="[todo.completed ? 'todo-item-completed' : 'todo-item']">{{ todo.text }}</label>
           </td>
           <td class="todo-item-delete">
             <img class="delete-todo-image"
@@ -39,13 +39,8 @@ import Velocity from 'velocity-animate'
 
 export default {
   name: 'Todo',
-  props: {
-    msg: String
-  },
   data: function() {
     return {
-      id_counter: 0,
-      todos: [],
       newTodo: "",
       hovering: {},
     }
@@ -56,32 +51,14 @@ export default {
       Velocity(el, {height: 0}, { complete: done })
     },
     addTodo() {
-      if (this.newTodo !== '') {
-        this.id_counter++;
-        this.todos.unshift(
-          {
-            id: this.id_counter,
-            text: this.newTodo,
-            completed: false,
-          }
-        );
-        this.newTodo = '';
-      }
+      this.$store.commit('addTodo', this.newTodo);
+      this.newTodo = "";
     },
     deleteTodo(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1);
+      this.$store.commit('deleteTodo', todo);
     },
     checkTodo(todo) {
-      // This is so the delete icon does not show when checking the todo
-      this.hovering = {};
-
-      let index = this.todos.indexOf(todo);
-      this.todos.splice(index, 1);
-      if (todo.completed) {
-        this.todos.push(todo);
-      } else {
-        this.todos.unshift(todo);
-      }
+      this.$store.commit('checkTodo', todo);
     }
   }
 }
