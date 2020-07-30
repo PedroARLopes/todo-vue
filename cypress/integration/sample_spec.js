@@ -3,7 +3,6 @@ import {enterTodo} from '../support/utils.js'
 beforeEach(() => {
     cy.visit('localhost:8080')
     //cy.get('.todo-items-grid').clear()
-    )
 })
 
 describe('write todo', () => {
