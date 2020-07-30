@@ -2,7 +2,7 @@ import {enterTodo} from '../support/utils.js'
 
 beforeEach(() => {
     cy.visit('localhost:8080')
-    //cy.get('.todo-items-grid').clear()
+    localStorage.clear()
 })
 
 describe('write todo', () => {
@@ -14,22 +14,30 @@ describe('write todo', () => {
 })
 
 describe('adding todo', () => {
-    it('adds todo to list with button', () => {
+    it('adds todo using button', () => {
+        let todoText = 'todo added using button'
         cy.get('.todo-input')
-            .type('first todo')
-            .should('have.value', 'first todo')
-        cy.get('.add-todo-image').click()
-        cy.get('.todo-input').should('empty')
-        cy.get('.todo-item-row')
+            .type(todoText)
+        cy.get('.add-todo-image')
+            .click()
+        cy.get('.todo-input')
+            .should('empty')
+        cy.get('.todo-item').should('be.visible')
+        cy.get('.todo-item')
             .should('have.length', 1)
+        cy.get('.todo-item')
+            .contains(todoText)
     })
 
-    it('adds todo to list with enter', () => {
-        enterTodo('second item')
+    it('adds todo using enter', () => {
+        let todoText = 'todo added using enter'
+        enterTodo(todoText)
         cy.get('.todo-input')
-            .type('{enter}')
-        cy.get('.todo-input').should('empty')
-        cy.get('.todo-item-row')
-            .should('have.length', 2)
+            .should('empty')
+        cy.get('.todo-item').should('be.visible')
+        cy.get('.todo-item')
+            .should('have.length', 1)
+        cy.get('.todo-item')
+            .contains(todoText)
     })
 })
