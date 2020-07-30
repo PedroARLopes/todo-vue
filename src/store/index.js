@@ -1,13 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-    plugins: [createPersistedState({
-        storage: window.sessionStorage,
-    })],
+const store = new Vuex.Store({
     state: {
         id_counter: 0,
         todos: [],
@@ -20,6 +16,13 @@ export default new Vuex.Store({
         },
     },
     mutations: {
+        initialiseStore(state) {
+            if (localStorage.getItem('store')) {
+                this.replaceState(
+                    Object.assign(state, JSON.parse(localStorage.getItem('store')))
+                );
+            }
+        },
         addTodo(state, todo) {
             if (todo === "") {
                 return;
@@ -47,3 +50,9 @@ export default new Vuex.Store({
         }
     },
 });
+
+store.subscribe((mutation, state) => {
+   localStorage.setItem('store', JSON.stringify(state));
+});
+
+export default store;
